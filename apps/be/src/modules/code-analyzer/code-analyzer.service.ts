@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
@@ -12,12 +13,14 @@ import { DocumentsService } from '../documents/documents.service';
 import { GitService } from '../git/git.service';
 import { FILE_EXTENSIONS_LANGUAGE_MAP } from './constants';
 import { type TRepository } from '../../db/schema';
+import { ScanCompletedEvent } from './events/scan-completed.event';
 
 @Injectable()
 export class CodeAnalyzerService {
   constructor(
     private readonly documentsService: DocumentsService,
-    private readonly gitService: GitService
+    private readonly gitService: GitService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   public async scan(repository: TRepository) {
@@ -111,5 +114,12 @@ export class CodeAnalyzerService {
     await this.documentsService.save(enrichedDocs, repository);
 
     await this.gitService.deleteClone(repository.id);
+
+    this.eventEmitter.emit(
+      ScanCompletedEvent.eventName,
+      new ScanCompletedEvent({ repositoryId: repository.id })
+    );
+
+    console.log(`scan completed for repository ${repository.id}`);
   }
 }

@@ -21,15 +21,23 @@ export class GitService {
 
     await this.gitClient.clone(repository.url, repositoryClonePath);
 
-    // ! this is a workaround since NX is crashing when trying to clone a repo with .gitignore @see https://github.com/nrwl/nx/issues/16718
-    // remove the .git directory & .gitignore from the clone
-    await Promise.all([
-      fs.rm(`${repositoryClonePath}/.git`, {
+    try {
+      // ! this is a workaround since NX is crashing when trying to clone a repo with .gitignore @see https://github.com/nrwl/nx/issues/16718
+      // remove the .git directory & .gitignore from the clone
+      await fs.rm(`${repositoryClonePath}/.gitignore`);
+    } catch (error) {
+      console.warn('failed removing .gitignore file', error);
+    }
+
+    try {
+      // remove the .git directory since it's not needed to be scanned
+      await fs.rm(`${repositoryClonePath}/.git`, {
         recursive: true,
         force: true,
-      }),
-      fs.rm(`${repositoryClonePath}/.gitignore`),
-    ]);
+      });
+    } catch (error) {
+      console.warn('failed removing .git directory', error);
+    }
 
     return { repositoryClonePath };
   }

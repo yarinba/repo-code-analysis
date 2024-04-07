@@ -13,7 +13,9 @@ export class RepositoriesController {
   async scan(@Body() { repositoryURL }: { repositoryURL: string }) {
     const repository = await this.repositoriesService.create(repositoryURL);
 
-    await this.codeAnalyzerService.scan(repository);
+    void this.codeAnalyzerService.scan(repository);
+
+    return repository;
   }
 
   @Get()

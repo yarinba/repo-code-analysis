@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
+import { TRepository } from '../../db/schema';
 
 @Injectable()
 export class RepositoriesService {
@@ -67,6 +68,16 @@ export class RepositoriesService {
     const { data } = await this.db
       .from(this.table)
       .insert({ owner, name, url: repositoryURL })
+      .select();
+
+    return data[0];
+  }
+
+  public async update(id: number, repository: Pick<TRepository, 'status'>) {
+    const { data } = await this.db
+      .from(this.table)
+      .update({ status: repository.status })
+      .eq('id', id)
       .select();
 
     return data[0];
