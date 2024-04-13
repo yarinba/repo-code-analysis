@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import fs from 'fs/promises';
 
 import { type Git, GIT_CLIENT } from '../../providers/git.provider';
@@ -26,7 +26,7 @@ export class GitService {
       // remove the .git directory & .gitignore from the clone
       await fs.rm(`${repositoryClonePath}/.gitignore`);
     } catch (error) {
-      console.warn('failed removing .gitignore file', error);
+      Logger.warn('failed removing .gitignore file', error);
     }
 
     try {
@@ -36,7 +36,7 @@ export class GitService {
         force: true,
       });
     } catch (error) {
-      console.warn('failed removing .git directory', error);
+      Logger.warn('failed removing .git directory', error);
     }
 
     return { repositoryClonePath };

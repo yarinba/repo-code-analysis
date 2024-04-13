@@ -9,6 +9,5 @@ import { RepositoriesEventHandler } from './repositories.event-handler';
   imports: [CodeAnalyzerModule],
   controllers: [RepositoriesController],
   providers: [DBProvider, RepositoriesService, RepositoriesEventHandler],
-  exports: [],
 })
 export class RepositoriesModule {}

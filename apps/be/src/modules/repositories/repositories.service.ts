@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 import { TRepository } from '../../db/schema';
 
@@ -58,7 +64,7 @@ export class RepositoriesService {
       .eq('name', name);
 
     if (existingData.length > 0) {
-      console.error(`repository ${owner}/${name} already exists`);
+      Logger.error(`repository ${owner}/${name} already exists`);
       throw new HttpException(
         `repository ${owner}/${name} already exists`,
         HttpStatus.BAD_REQUEST

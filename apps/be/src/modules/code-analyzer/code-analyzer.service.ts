@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
@@ -53,7 +53,7 @@ export class CodeAnalyzerService {
         if (language) {
           acc[language].push(doc);
         } else {
-          console.warn(`no language found for extension: ${extension}`, {
+          Logger.warn(`no language found for extension: ${extension}`, {
             repositoryId: repository.id,
           });
         }
@@ -107,7 +107,7 @@ export class CodeAnalyzerService {
       metadata: { ...doc.metadata, repository_id: repository.id },
     }));
 
-    console.log(
+    Logger.log(
       `saving ${enrichedDocs.length} documents for repository ${repository.id}`
     );
 
@@ -120,6 +120,6 @@ export class CodeAnalyzerService {
       new ScanCompletedEvent({ repositoryId: repository.id })
     );
 
-    console.log(`scan completed for repository ${repository.id}`);
+    Logger.log(`scan completed for repository ${repository.id}`);
   }
 }

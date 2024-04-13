@@ -1,11 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
-import { OpenAIEmbeddings } from '@langchain/openai';
 import { type Document } from '@langchain/core/documents';
 
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 import { TRepository } from '../../db/schema';
+import {
+  EMBEDDINGS_MODEL,
+  type EmbeddingsModel,
+} from '../../providers/embeddings-model.provider';
 
 @Injectable()
 export class DocumentsService {
@@ -13,15 +16,15 @@ export class DocumentsService {
 
   constructor(
     @Inject(DB_CLIENT) private readonly db: DB,
-    @Inject(OpenAIEmbeddings.name)
-    private readonly embeddingsClient: OpenAIEmbeddings
+    @Inject(EMBEDDINGS_MODEL)
+    private readonly embeddingsModel: EmbeddingsModel
   ) {}
 
   public async save(
     documents: Document[],
     repository: Pick<TRepository, 'id'>
   ) {
-    const embeddings = await this.embeddingsClient.embedDocuments(
+    const embeddings = await this.embeddingsModel.embedDocuments(
       documents.map((d) => d.pageContent)
     );
 
@@ -37,13 +40,13 @@ export class DocumentsService {
   }
 
   public async get({
-    repository,
+    repositoryId,
     prompt,
   }: {
-    repository: TRepository;
+    repositoryId: TRepository['id'];
     prompt: string;
   }) {
-    const vectorStore = new SupabaseVectorStore(this.embeddingsClient, {
+    const vectorStore = new SupabaseVectorStore(this.embeddingsModel, {
       client: this.db,
       tableName: this.table,
       queryName: 'match_documents',
@@ -53,9 +56,11 @@ export class DocumentsService {
       searchType: 'mmr',
       searchKwargs: { fetchK: 5 },
       filter: (rpc) =>
-        rpc.filter('metadata->>repository_id', 'eq', repository.id),
+        rpc.filter('metadata->>repository_id', 'eq', repositoryId),
     });
 
-    return await retriever.getRelevantDocuments(prompt);
+    const documents = await retriever.getRelevantDocuments(prompt);
+
+    return documents;
   }
 }
