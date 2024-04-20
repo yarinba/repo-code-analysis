@@ -1,10 +1,9 @@
 import { useState } from 'react';
+import { useAppContext } from '../context/use-app-context.hook';
 
-interface Props {
-  setCredentials: (credentials: string) => void;
-}
+export function Login() {
+  const { setCredentials } = useAppContext();
 
-export function Login({ setCredentials }: Props) {
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

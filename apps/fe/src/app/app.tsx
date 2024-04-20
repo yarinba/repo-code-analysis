@@ -1,14 +1,15 @@
-import { useLocalStorage } from 'usehooks-ts';
+import { useAppContext } from './context/use-app-context.hook';
 import Login from './login';
+import Chat from './chat';
 
 export function App() {
-  const [openAIKey, setOpenAIKey] = useLocalStorage('openai-api-key', '');
+  const { credentials } = useAppContext();
 
-  if (!openAIKey) {
-    return <Login setCredentials={setOpenAIKey} />;
+  if (!credentials) {
+    return <Login />;
   }
 
-  return <h1 className="text-3xl font-bold underline ">Hello world!</h1>;
+  return <Chat />;
 }
 
 export default App;
