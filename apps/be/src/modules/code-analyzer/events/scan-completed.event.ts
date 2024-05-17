@@ -1,4 +1,4 @@
-import { type TRepository } from '../../../db/schema';
+import { type TRepository } from '@repo-code-analyzer/types';
 
 export class ScanCompletedEvent {
   static eventName = 'scan-completed';

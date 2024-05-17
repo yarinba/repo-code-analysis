@@ -16,7 +16,7 @@ export function Actions() {
         <span
           className={`flex h-1 w-1 items-center justify-center rounded-full ${repository ? 'bg-green-500' : 'bg-red-500'}`}
         />
-        {repository ? repository : 'Choose Repository'}
+        {repository ? repository.name : 'Choose Repository'}
       </button>
 
       <RepositoriesModal

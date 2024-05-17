@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import fs from 'fs/promises';
 
+import { type TRepository } from '@repo-code-analyzer/types';
 import { type Git, GIT_CLIENT } from '../../providers/git.provider';
-import { type TRepository } from '../../db/schema';
 
 @Injectable()
 export class GitService {
@@ -15,7 +15,7 @@ export class GitService {
   }
 
   public async clone(
-    repository: TRepository
+    repository: TRepository,
   ): Promise<{ repositoryClonePath: string }> {
     const repositoryClonePath = this.generateRepositoryClonePath(repository.id);
 

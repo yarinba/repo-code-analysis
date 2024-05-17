@@ -5,8 +5,8 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
+import { type TRepository } from '@repo-code-analyzer/types';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
-import { TRepository } from '../../db/schema';
 
 @Injectable()
 export class RepositoriesService {
@@ -38,7 +38,7 @@ export class RepositoriesService {
 
     throw new HttpException(
       `invalid repository URL: ${repositoryURL}`,
-      HttpStatus.UNPROCESSABLE_ENTITY
+      HttpStatus.UNPROCESSABLE_ENTITY,
     );
   }
 
@@ -67,7 +67,7 @@ export class RepositoriesService {
       Logger.error(`repository ${owner}/${name} already exists`);
       throw new HttpException(
         `repository ${owner}/${name} already exists`,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     }
 

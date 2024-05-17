@@ -10,7 +10,8 @@ import { AppModule } from './modules/app/app.module';
 import { ZodFilter } from './exceptions/zod-filter.exception';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // TODO: take care of the CORS policy
+  const app = await NestFactory.create(AppModule, { cors: { origin: '*' } });
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
@@ -21,7 +22,7 @@ async function bootstrap() {
   await app.listen(port);
 
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
 

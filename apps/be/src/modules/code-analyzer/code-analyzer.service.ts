@@ -8,11 +8,11 @@ import {
   type RecursiveCharacterTextSplitterParams,
   type SupportedTextSplitterLanguage,
 } from 'langchain/text_splitter';
+import { type TRepository } from '@repo-code-analyzer/types';
 
 import { DocumentsService } from '../documents/documents.service';
 import { GitService } from '../git/git.service';
 import { FILE_EXTENSIONS_LANGUAGE_MAP } from './constants';
-import { type TRepository } from '../../db/schema';
 import { ScanCompletedEvent } from './events/scan-completed.event';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class CodeAnalyzerService {
   constructor(
     private readonly documentsService: DocumentsService,
     private readonly gitService: GitService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   public async scan(repository: TRepository) {
@@ -77,7 +77,7 @@ export class CodeAnalyzerService {
         proto: [],
         rst: [],
         scala: [],
-      } as Record<SupportedTextSplitterLanguage, any[]>
+      } as Record<SupportedTextSplitterLanguage, any[]>,
     );
 
     const splitterOptions: Partial<RecursiveCharacterTextSplitterParams> = {
@@ -89,13 +89,13 @@ export class CodeAnalyzerService {
       async ([language, docs]) => {
         const splitter = RecursiveCharacterTextSplitter.fromLanguage(
           language as SupportedTextSplitterLanguage,
-          splitterOptions
+          splitterOptions,
         );
 
         // Await the result of splitDocuments
         const splitDocs = await splitter.splitDocuments(docs);
         return splitDocs;
-      }
+      },
     );
 
     // Wait for all promises to resolve and then flatten the result
@@ -108,7 +108,7 @@ export class CodeAnalyzerService {
     }));
 
     Logger.log(
-      `saving ${enrichedDocs.length} documents for repository ${repository.id}`
+      `saving ${enrichedDocs.length} documents for repository ${repository.id}`,
     );
 
     await this.documentsService.save(enrichedDocs, repository);
@@ -117,7 +117,7 @@ export class CodeAnalyzerService {
 
     this.eventEmitter.emit(
       ScanCompletedEvent.eventName,
-      new ScanCompletedEvent({ repositoryId: repository.id })
+      new ScanCompletedEvent({ repositoryId: repository.id }),
     );
 
     Logger.log(`scan completed for repository ${repository.id}`);

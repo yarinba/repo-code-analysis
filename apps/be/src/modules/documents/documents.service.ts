@@ -1,10 +1,10 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
 import { type Document } from '@langchain/core/documents';
+import { type TRepository } from '@repo-code-analyzer/types';
 
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
-import { TRepository } from '../../db/schema';
 import {
   EMBEDDINGS_MODEL,
   type EmbeddingsModel,
@@ -17,15 +17,15 @@ export class DocumentsService {
   constructor(
     @Inject(DB_CLIENT) private readonly db: DB,
     @Inject(EMBEDDINGS_MODEL)
-    private readonly embeddingsModel: EmbeddingsModel
+    private readonly embeddingsModel: EmbeddingsModel,
   ) {}
 
   public async save(
     documents: Document[],
-    repository: Pick<TRepository, 'id'>
+    repository: Pick<TRepository, 'id'>,
   ) {
     const embeddings = await this.embeddingsModel.embedDocuments(
-      documents.map((d) => d.pageContent)
+      documents.map((d) => d.pageContent),
     );
 
     const documentsToSave = documents.map((doc, i) => ({

@@ -38,7 +38,7 @@ export type DatabaseSchema = {
             isOneToOne: false;
             referencedRelation: 'repositories';
             referencedColumns: ['id'];
-          }
+          },
         ];
       };
       repositories: {
@@ -144,8 +144,3 @@ export type DatabaseSchema = {
     };
   };
 };
-
-export type TRepository =
-  DatabaseSchema['public']['Tables']['repositories']['Row'];
-
-export type TDocument = DatabaseSchema['public']['Tables']['documents']['Row'];
