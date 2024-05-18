@@ -1,12 +1,13 @@
+import { type TMessage } from '@types';
+
 interface IProps {
-  id: number;
-  text: string;
+  message: TMessage;
 }
 
-export function UserMessage({ id, text }: IProps) {
-  const onUpVote = () => console.log('up vote message' + id);
+export function UserMessage({ message }: IProps) {
+  const onUpVote = () => console.log('up vote message' + message.id);
 
-  const onDownVote = () => console.log('down vote message' + id);
+  const onDownVote = () => console.log('down vote message' + message.id);
 
   return (
     <>
@@ -18,7 +19,7 @@ export function UserMessage({ id, text }: IProps) {
         />
 
         <div className="flex max-w-3xl items-center">
-          <p>{text}</p>
+          <p>{message.text}</p>
         </div>
       </div>
       <div className="mb-2 flex w-full flex-row justify-end gap-x-2 text-slate-500">

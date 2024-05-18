@@ -26,7 +26,7 @@ export class ChatService {
   private questionGeneratorPromptTemplate() {
     return ChatPromptTemplate.fromMessages([
       AIMessagePromptTemplate.fromTemplate(
-        'Given the following conversation about a codebase and a follow up question, rephrase the follow up question to be a standalone question.',
+        'Given the following conversation about a codebase and a follow up question, rephrase the follow up question to be a standalone question related to the codebase. If the question is not related to the codebase, respond with "I apologize, but my purpose is to answer questions specifically about the provided codebase. Please ask a question that is relevant to the code."',
       ),
       AIMessagePromptTemplate.fromTemplate(
         `Follow Up Input: {question} 
@@ -38,7 +38,7 @@ export class ChatService {
   private documentsGeneratorPromptTemplate() {
     return ChatPromptTemplate.fromMessages([
       AIMessagePromptTemplate.fromTemplate(
-        "Use the following pieces of context which include files from a github repository to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.\n\n{context}\n\n",
+        'As an AI assistant, your purpose is to provide accurate and helpful information about the codebase based on the context provided. Use the following pieces of context, which include files from a GitHub repository, to answer the question at the end. If the question cannot be answered based on the provided context, respond with "I apologize, but I don\'t have enough information in the provided context to answer this question accurately." Do not attempt to fabricate an answer.\n\n{context}\n\n',
       ),
       HumanMessagePromptTemplate.fromTemplate('Question: {question}'),
     ]);

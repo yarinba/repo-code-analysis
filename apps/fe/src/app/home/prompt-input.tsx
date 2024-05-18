@@ -1,12 +1,18 @@
 import { useState } from 'react';
+import { useAppContext } from '../context/use-app-context.hook';
 
 export function PromptInput() {
   const [prompt, setPrompt] = useState('');
 
-  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+  const { repository, loading, addUserMessage } = useAppContext();
+
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
 
-    console.log('Prompt submitted:', prompt);
+    if (disabled) return;
+
+    await addUserMessage(prompt);
+
     setPrompt('');
   };
 
@@ -16,6 +22,8 @@ export function PromptInput() {
       handleSubmit();
     }
   };
+
+  const disabled = !prompt || !repository || loading;
 
   return (
     <form className="mt-2" onSubmit={handleSubmit}>
@@ -35,7 +43,8 @@ export function PromptInput() {
         />
         <button
           type="submit"
-          className="absolute bottom-2 right-2.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:text-base"
+          disabled={disabled}
+          className="absolute bottom-2 right-2.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:text-base"
         >
           Send <span className="sr-only">Send message</span>
         </button>

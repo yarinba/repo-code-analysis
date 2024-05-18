@@ -1,9 +1,10 @@
+import { type TMessage } from '@types';
+
 interface IProps {
-  id: number;
-  text: string;
+  message: TMessage;
 }
 
-export function AIMessage({ id, text }: IProps) {
+export function AIMessage({ message }: IProps) {
   return (
     <div className="mb-4 flex rounded-xl bg-slate-50 px-2 py-6 dark:bg-slate-900 sm:px-4">
       <img
@@ -13,7 +14,7 @@ export function AIMessage({ id, text }: IProps) {
       />
 
       <div className="flex max-w-3xl items-center rounded-xl">
-        <p>{text}</p>
+        <p>{message.text}</p>
       </div>
     </div>
   );

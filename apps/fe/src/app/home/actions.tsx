@@ -3,15 +3,17 @@ import { useAppContext } from '../context/use-app-context.hook';
 import RepositoriesModal from './modals/repositories';
 
 export function Actions() {
-  const { repository } = useAppContext();
+  const { repository, loading, clearChat } = useAppContext();
 
   const [isRepositoriesModalOpen, setIsRepositoriesModalOpen] = useState(false);
 
   return (
     <div className="flex gap-2 py-2">
       <button
-        className="flex grow items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-center text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50"
+        id="repositories"
+        disabled={loading}
         onClick={() => setIsRepositoriesModalOpen(true)}
+        className="flex grow items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-center text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span
           className={`flex h-1 w-1 items-center justify-center rounded-full ${repository ? 'bg-green-500' : 'bg-red-500'}`}
@@ -24,7 +26,11 @@ export function Actions() {
         onClose={() => setIsRepositoriesModalOpen(false)}
       />
 
-      <button className="flex items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 md:w-40">
+      <button
+        id="settings"
+        disabled={loading}
+        className="flex items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:w-40"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
@@ -41,7 +47,13 @@ export function Actions() {
         </svg>
         <span className="hidden md:block">Settings</span>
       </button>
-      <button className="flex items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 md:w-40">
+
+      <button
+        id="clear-chat"
+        disabled={loading}
+        onClick={clearChat}
+        className="flex items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:w-40"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
