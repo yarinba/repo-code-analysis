@@ -3,7 +3,7 @@ import PromptInput from './prompt-input';
 import Suggestions from './suggestions';
 import Actions from './actions';
 
-export function Chat() {
+export function Home() {
   return (
     <div className="flex h-full justify-center">
       <div className="container flex h-full flex-col p-5">
@@ -16,4 +16,4 @@ export function Chat() {
   );
 }
 
-export default Chat;
+export default Home;

@@ -1,6 +1,6 @@
 import { useAppContext } from './context/use-app-context.hook';
 import Login from './login';
-import Chat from './chat';
+import Home from './home';
 
 export function App() {
   const { credentials } = useAppContext();
@@ -9,7 +9,7 @@ export function App() {
     return <Login />;
   }
 
-  return <Chat />;
+  return <Home />;
 }
 
 export default App;
