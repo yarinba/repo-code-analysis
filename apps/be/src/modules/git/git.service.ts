@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import fs from 'fs/promises';
 
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 import { type Git, GIT_CLIENT } from '../../providers/git.provider';
 
 @Injectable()

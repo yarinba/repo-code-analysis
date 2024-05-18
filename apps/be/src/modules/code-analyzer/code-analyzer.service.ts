@@ -8,7 +8,7 @@ import {
   type RecursiveCharacterTextSplitterParams,
   type SupportedTextSplitterLanguage,
 } from 'langchain/text_splitter';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 import { DocumentsService } from '../documents/documents.service';
 import { GitService } from '../git/git.service';

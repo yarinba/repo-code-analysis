@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useAppContext } from '../../context/use-app-context.hook';
 import { useQuery } from '@tanstack/react-query';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 interface IProps {
   open: boolean;

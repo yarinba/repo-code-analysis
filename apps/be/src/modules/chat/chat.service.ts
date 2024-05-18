@@ -8,7 +8,7 @@ import {
 import { RunnableSequence } from '@langchain/core/runnables';
 import { formatDocumentsAsString } from 'langchain/util/document';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 import {
   CHAT_MODEL,

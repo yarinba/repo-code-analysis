@@ -8,7 +8,7 @@ import {
 import { useLocalStorage } from 'usehooks-ts';
 import { noop } from 'lodash';
 import axios from 'axios';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 export interface IAppContext {
   credentials: string | null;

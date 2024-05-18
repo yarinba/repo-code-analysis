@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
 import { type Document } from '@langchain/core/documents';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 import {

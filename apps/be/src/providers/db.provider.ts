@@ -1,7 +1,7 @@
 import { type Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { type DatabaseSchema } from '@repo-code-analyzer/types';
+import { type DatabaseSchema } from '@types';
 export const DB_CLIENT = 'DB_CLIENT';
 
 export const DBProvider: Provider = {

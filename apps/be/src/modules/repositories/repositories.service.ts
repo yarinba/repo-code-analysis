@@ -5,7 +5,7 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 
 @Injectable()

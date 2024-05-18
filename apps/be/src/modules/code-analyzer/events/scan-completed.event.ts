@@ -1,4 +1,4 @@
-import { type TRepository } from '@repo-code-analyzer/types';
+import { type TRepository } from '@types';
 
 export class ScanCompletedEvent {
   static eventName = 'scan-completed';
