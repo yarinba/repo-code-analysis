@@ -14,6 +14,15 @@ export class RepositoriesService {
 
   constructor(@Inject(DB_CLIENT) private readonly db: DB) {}
 
+  /**
+   * Extracts repository owner and name from the given repository URL.
+   * Supports both HTTPS and SSH formats for GitHub URLs.
+   *
+   * @param repositoryURL The URL of the repository.
+   *
+   * @returns An object containing the owner and name of the repository.
+   * @throws HttpException if the URL is invalid.
+   */
   private extractRepoInfo(repositoryURL: string): {
     owner: string;
     name: string;
@@ -42,18 +51,38 @@ export class RepositoriesService {
     );
   }
 
+  /**
+   * Retrieves all repositories from the database.
+   *
+   * @returns Promise<any[]> representing an array of all repositories.
+   */
   public async findAll() {
     const { data } = await this.db.from(this.table).select('*');
 
     return data;
   }
 
+  /**
+   * Retrieves a repository by its ID from the database.
+   *
+   * @param id The ID of the repository to retrieve.
+   *
+   * @returns Promise<any> representing the retrieved repository.
+   */
   public async findOne(id: number) {
     const { data } = await this.db.from(this.table).select('*').eq('id', id);
 
     return data[0];
   }
 
+  /**
+   * Creates a new repository entry in the database.
+   *
+   * @param repositoryURL The URL of the repository to create.
+   *
+   * @returns Promise<any> representing the created repository.
+   * @throws HttpException if the repository already exists.
+   */
   public async create(repositoryURL: string) {
     const { owner, name } = this.extractRepoInfo(repositoryURL);
 
@@ -79,6 +108,14 @@ export class RepositoriesService {
     return data[0];
   }
 
+  /**
+   * Updates the status of a repository in the database.
+   *
+   * @param id The ID of the repository to update.
+   * @param repository An object containing the updated status of the repository.
+   *
+   * @returns Promise<any> representing the updated repository.
+   */
   public async update(id: number, repository: Pick<TRepository, 'status'>) {
     const { data } = await this.db
       .from(this.table)

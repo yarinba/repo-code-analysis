@@ -20,6 +20,14 @@ export class DocumentsService {
     private readonly embeddingsModel: EmbeddingsModel,
   ) {}
 
+  /**
+   * Saves documents associated with a repository to the database.
+   *
+   * @param documents The array of documents to save.
+   * @param repository The repository to which the documents belong.
+   *
+   * @returns Promise<void> indicating the completion of the save operation.
+   */
   public async save(
     documents: Document[],
     repository: Pick<TRepository, 'id'>,
@@ -39,6 +47,13 @@ export class DocumentsService {
     await this.db.from(this.table).insert(documentsToSave);
   }
 
+  /**
+   * Retrieves relevant documents based on a given prompt and repository ID.
+   *
+   * @param params An object containing repositoryId and prompt.
+   *
+   * @returns Promise<Document[]> representing the relevant documents.
+   */
   public async get({
     repositoryId,
     prompt,
