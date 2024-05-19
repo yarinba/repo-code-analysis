@@ -9,6 +9,13 @@ export class RepositoriesController {
     private readonly codeAnalyzerService: CodeAnalyzerService
   ) {}
 
+  /**
+   * Endpoint for scanning a repository specified by its URL.
+   *
+   * @param repositoryURL The URL of the repository to scan.
+   *
+   * @returns Promise<void> indicating the completion of the scan operation.
+   */
   @Post()
   async scan(@Body() { repositoryURL }: { repositoryURL: string }) {
     const repository = await this.repositoriesService.create(repositoryURL);
@@ -18,6 +25,11 @@ export class RepositoriesController {
     return repository;
   }
 
+  /**
+   * Endpoint for retrieving all repositories.
+   *
+   * @returns Promise<any[]> representing an array of all repositories.
+   */
   @Get()
   async findAll() {
     return this.repositoriesService.findAll();

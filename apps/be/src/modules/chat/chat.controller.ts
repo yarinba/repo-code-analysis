@@ -9,6 +9,14 @@ import { ZodPipe } from '../../pipes/zod.pipe';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
+  /**
+   * Handles incoming requests to ask a question related to a GitHub repository.
+   *
+   * @param repositoryId The ID of the GitHub repository to which the question pertains.
+   * @param question The question asked by the user.
+   *
+   * @returns A Promise resolving to a TMessage object representing the chatbot's response.
+   */
   @Post()
   async ask(
     @Body(new ZodPipe(askSchema))
