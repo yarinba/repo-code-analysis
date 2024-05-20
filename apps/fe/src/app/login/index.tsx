@@ -9,7 +9,7 @@ export function Login() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // TODO: should validate as OpenAI API Key
+    // TODO: Validate OpenAI API key
     setCredentials(inputValue);
   };
 
@@ -60,29 +60,14 @@ export function Login() {
           <div className="border-t border-gray-200/40  p-8 md:w-1/2 md:border-t-0 md:border-l">
             <h2 className="mb-4 text-2xl font-bold">How It Works</h2>
             <p className="text-gray-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              vestibulum, nisl nec ultricies lacinia, nisl nisl aliquam nisl,
-              eget aliquam nisl nisl sit amet nisl. Sed vestibulum, nisl nec
-              ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl
-              sit amet nisl. Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Aliquid sit ut eveniet iste expedita ipsum odit similique
-              veritatis quas! Neque expedita eaque blanditiis doloribus amet
-              veniam aliquam nisi ullam inventore? Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed vestibulum, nisl nec ultricies
-              lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet
-              nisl. Sed vestibulum, nisl nec ultricies lacinia, nisl nisl
-              aliquam nisl, eget aliquam nisl nisl sit amet nisl. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Aliquid sit ut
-              eveniet iste expedita ipsum odit similique veritatis quas! Neque
-              expedita eaque blanditiis doloribus amet veniam aliquam nisi ullam
-              inventore? Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Sed vestibulum, nisl nec ultricies lacinia, nisl nisl
-              aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed
-              vestibulum, nisl nec ultricies lacinia, nisl nisl aliquam nisl,
-              eget aliquam nisl nisl sit amet nisl. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Aliquid sit ut eveniet iste expedita
-              ipsum odit similique veritatis quas! Neque expedita eaque
-              blanditiis doloribus amet veniam aliquam nisi ullam inventore?
+              The Repo Analysis Chatbot system facilitates developers in understanding and navigating complex codebases on GitHub efficiently. Here's how it works:
+
+              - **Frontend Application (Client):** Responsible for providing the user interface, sending user queries to the backend, and displaying responses received from the backend. It also handles user authentication and authorization using OpenAI API keys.
+              - **Backend Application (Server):** Handles incoming requests from the frontend, communicates with the OpenAI API for embeddings and chat functionalities, and interacts with the Supabase database for storing and retrieving data. Key services include the Code Analyzer Service and the Chat Service.
+              - **Database (Supabase):** Stores repository data, embedded file vectors, prompts, and rankings.
+              - **OpenAI API:** Generates embeddings for repository files and provides the language model for generating responses to user queries.
+
+              The system employs the Retrieval-Augmented Generation (RAG) pattern in the Chat Service, where relevant information is retrieved from the vector store based on user queries and used to augment the language model's knowledge during response generation. By leveraging TypeScript, React, Node.js, NestJS, Supabase, and the OpenAI API, the Repo Analysis Chatbot enhances developer productivity and collaboration by providing an intuitive and effective way to analyze and understand code repositories.
             </p>
           </div>
         </div>
