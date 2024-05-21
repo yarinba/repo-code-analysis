@@ -1,19 +1,24 @@
 import { useState } from 'react';
 import { useAppContext } from '../context/use-app-context.hook';
+import { uniqueId } from 'lodash';
 
 export function PromptInput() {
   const [prompt, setPrompt] = useState('');
 
-  const { repository, loading, addUserMessage } = useAppContext();
+  const { repository, loading, addMessage } = useAppContext();
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
 
     if (disabled) return;
 
-    await addUserMessage(prompt);
-
     setPrompt('');
+
+    await addMessage({
+      id: uniqueId(),
+      text: prompt,
+      actor: 'user',
+    });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

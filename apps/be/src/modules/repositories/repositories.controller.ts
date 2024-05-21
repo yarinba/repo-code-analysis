@@ -6,7 +6,7 @@ import { CodeAnalyzerService } from '../code-analyzer/code-analyzer.service';
 export class RepositoriesController {
   constructor(
     private readonly repositoriesService: RepositoriesService,
-    private readonly codeAnalyzerService: CodeAnalyzerService
+    private readonly codeAnalyzerService: CodeAnalyzerService,
   ) {}
 
   /**
@@ -14,7 +14,7 @@ export class RepositoriesController {
    *
    * @param repositoryURL The URL of the repository to scan.
    *
-   * @returns Promise<void> indicating the completion of the scan operation.
+   * @returns Promise<TRepository> indicating the start of the scanning operation.
    */
   @Post()
   async scan(@Body() { repositoryURL }: { repositoryURL: string }) {
@@ -28,7 +28,7 @@ export class RepositoriesController {
   /**
    * Endpoint for retrieving all repositories.
    *
-   * @returns Promise<any[]> representing an array of all repositories.
+   * @returns Promise<TRepository[]> representing an array of all repositories.
    */
   @Get()
   async findAll() {

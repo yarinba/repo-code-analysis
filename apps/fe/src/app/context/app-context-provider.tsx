@@ -19,7 +19,7 @@ export interface IAppContext {
   messages: TMessage[];
   setCredentials: (credentials: string) => void;
   setRepository: (repository: TRepository) => void;
-  addUserMessage: (prompt: string) => Promise<void>;
+  addMessage: (message: TMessage) => Promise<void>;
   clearChat: () => void;
 }
 
@@ -30,7 +30,7 @@ export const AppContext = createContext<IAppContext>({
   messages: [],
   setCredentials: noop,
   setRepository: noop,
-  addUserMessage: () => Promise.resolve(),
+  addMessage: () => Promise.resolve(),
   clearChat: noop,
 });
 
@@ -55,27 +55,21 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     setMessages([]);
   }, [repository]);
 
-  const addUserMessage = useCallback(
-    async (prompt: string) => {
+  const addMessage = useCallback(
+    async (message: TMessage) => {
       if (!repository) {
         console.error('invariant violation: no repository set');
         return;
       }
 
-      const userMessage: TMessage = {
-        id: uniqueId(),
-        text: prompt,
-        actor: 'user',
-      };
-
       setLoading(true);
 
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setMessages((prevMessages) => [...prevMessages, message]);
 
       try {
         const { data } = await axios.post<TMessage>('/chat', {
           repositoryId: repository.id,
-          question: prompt,
+          question: message.text,
         });
 
         setMessages((prevMessages) => [...prevMessages, data]);
@@ -103,7 +97,7 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
         messages,
         setCredentials,
         setRepository,
-        addUserMessage,
+        addMessage,
         clearChat: () => setMessages([]),
       }}
     >
