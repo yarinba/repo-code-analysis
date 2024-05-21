@@ -11,7 +11,7 @@ import { ValidateApiKeyModule } from '../validations/validate-api-key.module';
     ConfigModule.forRoot({ isGlobal: true }),
     EventEmitterModule.forRoot(),
     RepositoriesModule,
-    ValidateApiKeyModule, // Add the new module to imports
+    ValidateApiKeyModule,
   ],
   controllers: [],
   providers: [],
