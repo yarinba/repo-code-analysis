@@ -22,6 +22,7 @@ export function Suggestions() {
     <div className="mt-2 flex w-full gap-x-2 overflow-x-auto whitespace-nowrap text-xs text-slate-600 dark:text-slate-300 sm:text-sm">
       {prompts?.map((prompt) => (
         <button
+          key={prompt.id}
           onClick={() =>
             addMessage({
               id: uniqueId(),

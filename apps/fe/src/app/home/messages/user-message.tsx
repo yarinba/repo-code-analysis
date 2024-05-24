@@ -1,4 +1,4 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type TMessage } from '@types';
 import axios from 'axios';
 import { useAppContext } from '../../context/use-app-context.hook';
@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export function UserMessage({ message }: IProps) {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const { repository } = useAppContext();
 

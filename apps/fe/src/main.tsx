@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import axios from 'axios';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import AppContextProvider from './app/context/app-context-provider';
 import App from './app/app';
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
       <AppContextProvider>
         <App />
       </AppContextProvider>
