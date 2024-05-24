@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type TMessage } from '@types';
 import axios from 'axios';
 import { useAppContext } from '../../context/use-app-context.hook';
+import { useScrollIntoView } from './useScrollIntoView';
 
 interface IProps {
   message: TMessage;
@@ -11,6 +12,8 @@ export function UserMessage({ message }: IProps) {
   const queryClient = useQueryClient();
 
   const { repository } = useAppContext();
+
+  const { ref } = useScrollIntoView({ text: message.text });
 
   const { mutate: upvote } = useMutation({
     mutationKey: ['upvote', message.id],
@@ -47,7 +50,7 @@ export function UserMessage({ message }: IProps) {
 
   return (
     <>
-      <div className="flex flex-row px-2 py-4 sm:px-4">
+      <div ref={ref} className="flex flex-row px-2 py-4 sm:px-4">
         <img
           alt="user avatar"
           className="mr-2 flex h-8 w-8 rounded-full sm:mr-4"
