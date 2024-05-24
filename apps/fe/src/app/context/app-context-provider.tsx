@@ -11,6 +11,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { noop, uniqueId } from 'lodash';
 import axios from 'axios';
 import type { TMessage, TRepository } from '@types';
+import { API_URL } from '../../main';
 
 export interface IAppContext {
   loading: boolean;
@@ -67,12 +68,47 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
       setMessages((prevMessages) => [...prevMessages, message]);
 
       try {
-        const { data } = await axios.post<TMessage>('/chat', {
-          repositoryId: repository.id,
-          question: message.text,
-        });
+        // init empty ai message
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { id: uniqueId(), text: '', actor: 'ai' },
+        ]);
 
-        setMessages((prevMessages) => [...prevMessages, data]);
+        const response = await fetch(`${API_URL}/chat`, {
+          method: 'post',
+          headers: {
+            Accept: 'application/json, text/plain, */*', // indicates which files we are able to understand
+            'Content-Type': 'application/json', // indicates what the server actually sent
+            'openai-api-key': credentials || '',
+          },
+          body: JSON.stringify({
+            repositoryId: repository.id,
+            question: message.text,
+          }),
+        });
+        if (!response.ok || !response.body) {
+          throw response.statusText;
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        const loopRunner = true;
+
+        while (loopRunner) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          const decodedChunk = decoder.decode(value, { stream: true });
+
+          setMessages((prevMessages) => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+
+            return [
+              ...prevMessages.slice(0, -1),
+              { ...lastMessage, text: lastMessage.text + decodedChunk },
+            ];
+          });
+        }
       } catch (error) {
         // TODO: snackbar error message about invalid key (?)
         console.error('Error adding message:', error);
@@ -80,7 +116,7 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
         setLoading(false);
       }
     },
-    [repository],
+    [credentials, repository],
   );
 
   const setRepository = useCallback((repository: TRepository) => {

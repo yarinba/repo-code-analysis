@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { uniqueId } from 'lodash';
 import { type TMessage } from '@types';
 import { ChatService } from './chat.service';
@@ -21,10 +22,20 @@ export class ChatController {
   async ask(
     @Body(new ZodPipe(askSchema))
     { repositoryId, question }: { repositoryId: number; question: string },
-  ): Promise<TMessage> {
-    const answer = await this.chatService.ask(repositoryId, question);
+    @Res() res: Response,
+  ) {
+    const streamedAnswer = await this.chatService.ask(repositoryId, question);
 
-    // TODO: in the future, we might want to save the message to the database
-    return { id: uniqueId(), text: answer, actor: 'ai' };
+    res.set('Content-Type', 'application/octet-stream');
+    res.set('X-Content-Type-Options', 'nosniff');
+
+    for await (const chunk of streamedAnswer) {
+      // here express will stream the response
+      res.write(chunk);
+    }
+    // here express sends the closing/done/end signal for the stream consumer
+    res.end();
+    // // TODO: in the future, we might want to save the message to the database
+    // return { id: uniqueId(), text: answer, actor: 'ai' };
   }
 }

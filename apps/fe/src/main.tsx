@@ -10,7 +10,9 @@ import App from './app/app';
 
 import './index.css';
 
-axios.defaults.baseURL = 'http://localhost:3000/api';
+export const API_URL = 'http://localhost:3000/api' as const;
+
+axios.defaults.baseURL = API_URL;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
