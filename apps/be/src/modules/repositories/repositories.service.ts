@@ -29,9 +29,9 @@ export class RepositoriesService {
   } {
     // Regular expressions for both HTTPS and SSH URLs for GitHub
     const HTTPS_REGEX =
-      /^(https?):\/\/(www\.)?github\.com\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\.git$/;
+      /^(https?):\/\/(www\.)?github\.com\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)(\.git)?$/;
     const SSH_REGEX =
-      /^git@github\.com:([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\.git$/;
+      /^git@github\.com:([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)(\.git)?$/;
 
     // Check if the URL matches either HTTPS or SSH format
     const httpsMatch = repositoryURL.match(HTTPS_REGEX);
