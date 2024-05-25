@@ -3,7 +3,6 @@ import {
   PropsWithChildren,
   createContext,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react';
@@ -14,7 +13,7 @@ import type { TMessage, TRepository } from '@types';
 import { API_URL } from '../../main';
 
 export interface IAppContext {
-  loading: boolean;
+  loadingMessage: string | null;
   credentials: string | null;
   repository: TRepository | null;
   messages: TMessage[];
@@ -25,7 +24,7 @@ export interface IAppContext {
 }
 
 export const AppContext = createContext<IAppContext>({
-  loading: false,
+  loadingMessage: null,
   credentials: null,
   repository: null,
   messages: [],
@@ -36,11 +35,9 @@ export const AppContext = createContext<IAppContext>({
 });
 
 const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [messages, setMessages] = useState<TMessage[]>([
-    { actor: 'user', id: uniqueId(), text: 'Hello! How can I help you today?' },
-    { actor: 'ai', id: uniqueId(), text: 'Hello! How can I help you today?' },
-  ]);
+  // the id of the message that is currently being loaded
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+  const [messages, setMessages] = useState<TMessage[]>([]);
   const [repository, _setRepository] = useState<TRepository | null>(null);
   const [credentials, setCredentials] = useLocalStorage<string | null>(
     'openai-api-key',
@@ -62,16 +59,19 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
         return;
       }
 
-      setLoading(true);
+      const initialAIMessage: TMessage = {
+        id: uniqueId(),
+        text: '',
+        actor: 'ai',
+      };
+
+      setLoadingMessage(initialAIMessage.id);
 
       setMessages((prevMessages) => [...prevMessages, message]);
 
       try {
         // init empty ai message
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { id: uniqueId(), text: '', actor: 'ai' },
-        ]);
+        setMessages((prevMessages) => [...prevMessages, initialAIMessage]);
 
         const response = await fetch(`${API_URL}/chat`, {
           method: 'post',
@@ -112,7 +112,7 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
         // TODO: snackbar error message about invalid key (?)
         console.error('Error adding message:', error);
       } finally {
-        setLoading(false);
+        setLoadingMessage(null);
       }
     },
     [credentials, repository],
@@ -126,7 +126,7 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        loading,
+        loadingMessage,
         credentials,
         repository,
         messages,

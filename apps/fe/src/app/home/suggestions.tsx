@@ -5,7 +5,7 @@ import axios from 'axios';
 import { uniqueId } from 'lodash';
 
 export function Suggestions() {
-  const { repository, loading, addMessage } = useAppContext();
+  const { repository, loadingMessage, addMessage } = useAppContext();
 
   const { data: prompts } = useQuery<TPrompt[]>({
     queryKey: ['prompt-suggestions', repository?.id],
@@ -31,7 +31,7 @@ export function Suggestions() {
               predefinedPromptId: prompt.id,
             })
           }
-          disabled={loading}
+          disabled={Boolean(loadingMessage)}
           className="rounded-lg bg-slate-200 p-2 hover:bg-blue-600 hover:text-slate-200 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:hover:bg-blue-600 dark:hover:text-slate-50"
         >
           {prompt.text}

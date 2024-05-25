@@ -53,7 +53,7 @@ export function UserMessage({ message }: IProps) {
       <div ref={ref} className="flex flex-row gap-4 px-2 py-4 sm:px-4">
         <div
           aria-details="user-avatar"
-          className="relative h-10 w-10 scale-90 overflow-hidden rounded-full bg-gray-200 outline outline-offset-2 outline-gray-600 dark:bg-gray-600"
+          className="relative h-10 w-10 shrink-0 scale-90 overflow-hidden rounded-full bg-gray-200 outline outline-offset-2 outline-gray-600 dark:bg-gray-600"
         >
           <svg
             className="absolute -left-1 h-12 w-12 text-gray-600 dark:text-gray-300"

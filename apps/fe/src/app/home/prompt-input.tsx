@@ -5,7 +5,7 @@ import { uniqueId } from 'lodash';
 export function PromptInput() {
   const [prompt, setPrompt] = useState('');
 
-  const { repository, loading, addMessage } = useAppContext();
+  const { repository, loadingMessage, addMessage } = useAppContext();
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -28,8 +28,7 @@ export function PromptInput() {
     }
   };
 
-  const disabled = !prompt || !repository || loading;
-
+  const disabled = !prompt || !repository || Boolean(loadingMessage);
   return (
     <form className="mt-2" onSubmit={handleSubmit}>
       <label htmlFor="chat-input" className="sr-only">
