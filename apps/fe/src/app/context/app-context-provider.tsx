@@ -37,7 +37,10 @@ export const AppContext = createContext<IAppContext>({
 
 const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [messages, setMessages] = useState<TMessage[]>([]);
+  const [messages, setMessages] = useState<TMessage[]>([
+    { actor: 'user', id: uniqueId(), text: 'Hello! How can I help you today?' },
+    { actor: 'ai', id: uniqueId(), text: 'Hello! How can I help you today?' },
+  ]);
   const [repository, _setRepository] = useState<TRepository | null>(null);
   const [credentials, setCredentials] = useLocalStorage<string | null>(
     'openai-api-key',
@@ -51,10 +54,6 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
       delete axios.defaults.headers.common['openai-api-key'];
     }
   }, [credentials]);
-
-  useEffect(() => {
-    setMessages([]);
-  }, [repository]);
 
   const addMessage = useCallback(
     async (message: TMessage) => {

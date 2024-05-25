@@ -50,12 +50,24 @@ export function UserMessage({ message }: IProps) {
 
   return (
     <>
-      <div ref={ref} className="flex flex-row px-2 py-4 sm:px-4">
-        <img
-          alt="user avatar"
-          className="mr-2 flex h-8 w-8 rounded-full sm:mr-4"
-          src="https://dummyimage.com/256x256/363536/ffffff&text=U"
-        />
+      <div ref={ref} className="flex flex-row gap-4 px-2 py-4 sm:px-4">
+        <div
+          aria-details="user-avatar"
+          className="relative h-10 w-10 scale-90 overflow-hidden rounded-full bg-gray-200 outline outline-offset-2 outline-gray-600 dark:bg-gray-600"
+        >
+          <svg
+            className="absolute -left-1 h-12 w-12 text-gray-600 dark:text-gray-300"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
 
         <div className="flex max-w-3xl items-center">
           <p>{message.text}</p>
