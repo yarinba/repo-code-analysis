@@ -3,7 +3,6 @@ import {
   PropsWithChildren,
   createContext,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react';
@@ -11,31 +10,33 @@ import { useLocalStorage } from 'usehooks-ts';
 import { noop, uniqueId } from 'lodash';
 import axios from 'axios';
 import type { TMessage, TRepository } from '@types';
+import { API_URL } from '../../main';
 
 export interface IAppContext {
-  loading: boolean;
+  loadingMessage: string | null;
   credentials: string | null;
   repository: TRepository | null;
   messages: TMessage[];
   setCredentials: (credentials: string) => void;
   setRepository: (repository: TRepository) => void;
-  addUserMessage: (prompt: string) => Promise<void>;
+  addMessage: (message: TMessage) => Promise<void>;
   clearChat: () => void;
 }
 
 export const AppContext = createContext<IAppContext>({
-  loading: false,
+  loadingMessage: null,
   credentials: null,
   repository: null,
   messages: [],
   setCredentials: noop,
   setRepository: noop,
-  addUserMessage: () => Promise.resolve(),
+  addMessage: () => Promise.resolve(),
   clearChat: noop,
 });
 
 const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  // the id of the message that is currently being loaded
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [messages, setMessages] = useState<TMessage[]>([]);
   const [repository, _setRepository] = useState<TRepository | null>(null);
   const [credentials, setCredentials] = useLocalStorage<string | null>(
@@ -51,42 +52,70 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [credentials]);
 
-  useEffect(() => {
-    setMessages([]);
-  }, [repository]);
-
-  const addUserMessage = useCallback(
-    async (prompt: string) => {
+  const addMessage = useCallback(
+    async (message: TMessage) => {
       if (!repository) {
         console.error('invariant violation: no repository set');
         return;
       }
 
-      const userMessage: TMessage = {
+      const initialAIMessage: TMessage = {
         id: uniqueId(),
-        text: prompt,
-        actor: 'user',
+        text: '',
+        actor: 'ai',
       };
 
-      setLoading(true);
+      setLoadingMessage(initialAIMessage.id);
 
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setMessages((prevMessages) => [...prevMessages, message]);
 
       try {
-        const { data } = await axios.post<TMessage>('/chat', {
-          repositoryId: repository.id,
-          question: prompt,
-        });
+        // init empty ai message
+        setMessages((prevMessages) => [...prevMessages, initialAIMessage]);
 
-        setMessages((prevMessages) => [...prevMessages, data]);
+        const response = await fetch(`${API_URL}/chat`, {
+          method: 'post',
+          headers: {
+            Accept: 'application/json, text/plain, */*', // indicates which files we are able to understand
+            'Content-Type': 'application/json', // indicates what the server actually sent
+            'openai-api-key': credentials || '',
+          },
+          body: JSON.stringify({
+            repositoryId: repository.id,
+            question: message.text,
+          }),
+        });
+        if (!response.ok || !response.body) {
+          throw response.statusText;
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        const loopRunner = true;
+
+        while (loopRunner) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          const decodedChunk = decoder.decode(value, { stream: true });
+
+          setMessages((prevMessages) => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+
+            return [
+              ...prevMessages.slice(0, -1),
+              { ...lastMessage, text: lastMessage.text + decodedChunk },
+            ];
+          });
+        }
       } catch (error) {
         // TODO: snackbar error message about invalid key (?)
         console.error('Error adding message:', error);
       } finally {
-        setLoading(false);
+        setLoadingMessage(null);
       }
     },
-    [repository],
+    [credentials, repository],
   );
 
   const setRepository = useCallback((repository: TRepository) => {
@@ -97,13 +126,13 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        loading,
+        loadingMessage,
         credentials,
         repository,
         messages,
         setCredentials,
         setRepository,
-        addUserMessage,
+        addMessage,
         clearChat: () => setMessages([]),
       }}
     >

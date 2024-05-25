@@ -115,8 +115,6 @@ export class ChatService {
   public async ask(repositoryId: TRepository['id'], question: string) {
     const conversationChain = this.createConversationChain(repositoryId);
 
-    const answer = await conversationChain.invoke({ question });
-
-    return answer;
+    return conversationChain.stream({ question });
   }
 }

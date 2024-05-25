@@ -3,7 +3,9 @@ import { useAppContext } from '../context/use-app-context.hook';
 import RepositoriesModal from './modals/repositories';
 
 export function Actions() {
-  const { repository, loading, clearChat } = useAppContext();
+  const { repository, loadingMessage, clearChat } = useAppContext();
+
+  const loading = Boolean(loadingMessage);
 
   const [isRepositoriesModalOpen, setIsRepositoriesModalOpen] = useState(false);
 
