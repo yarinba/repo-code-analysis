@@ -109,16 +109,7 @@ export class RepositoriesService {
 
     const createdRepo = data[0];
 
-    const defaultPrompts = [
-      "What are the main technologies used in this repository?",
-      "What is the general idea of this repository?",
-      "Explain in detail about one core service of this repository.",
-      "Does this repo have more than one contributor?"
-    ];
-
-    for (const prompt of defaultPrompts) {
-      await this.promptsService.create(createdRepo.id, prompt);
-    }
+    await this.promptsService.createDefaultPrompts(createdRepo.id);
 
     return createdRepo;
   }

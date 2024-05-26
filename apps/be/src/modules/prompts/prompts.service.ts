@@ -44,4 +44,21 @@ export class PromptsService {
 
     return updatedData[0];
   }
+
+  public async createDefaultPrompts(repositoryId: number) {
+    const defaultPrompts = [
+      "What are the main technologies used in this repository?",
+      "What is the general purpose of this repository?",
+      "Explain in detail about one core service of this repository.",
+      "Does this repository have more than one contributor?"
+    ];
+
+    const prompts = defaultPrompts.map(text => ({ repository_id: repositoryId, text }));
+    const { data } = await this.db
+      .from(this.table)
+      .insert(prompts)
+      .select();
+
+    return data;
+  }
 }
