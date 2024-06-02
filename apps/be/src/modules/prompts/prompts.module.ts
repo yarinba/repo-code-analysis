@@ -7,5 +7,6 @@ import { PromptsController } from './prompts.controller';
   imports: [],
   controllers: [PromptsController],
   providers: [DBProvider, PromptsService],
+  exports: [PromptsService],
 })
 export class PromptsModule {}

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { type TPrompt } from '@types';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 
 @Injectable()
@@ -45,18 +44,17 @@ export class PromptsService {
     return updatedData[0];
   }
 
-  public async createDefaultPrompts(repositoryId: number) {
-    const defaultPrompts = [
-      "What are the main technologies used in this repository?",
-      "What is the general purpose of this repository?",
-      "Explain in detail about one core service of this repository.",
-      "Does this repository have more than one contributor?"
+  public async attachDefaultPromptsToRepo(repositoryId: number) {
+    const prompts = [
+      'What are the main technologies used in this repository?',
+      'What is the general purpose of this repository?',
+      'Explain in detail about one core service of this repository.',
+      'Does this repository have more than one contributor?',
     ];
 
-    const prompts = defaultPrompts.map(text => ({ repository_id: repositoryId, text }));
     const { data } = await this.db
       .from(this.table)
-      .insert(prompts)
+      .insert(prompts.map((text) => ({ repository_id: repositoryId, text })))
       .select();
 
     return data;

@@ -13,8 +13,10 @@ import { PromptsService } from '../prompts/prompts.service';
 export class RepositoriesService {
   private readonly table = 'repositories';
 
-  constructor(@Inject(DB_CLIENT) private readonly db: DB,
-              private readonly promptsService: PromptsService) {}
+  constructor(
+    @Inject(DB_CLIENT) private readonly db: DB,
+    private readonly promptsService: PromptsService,
+  ) {}
 
   /**
    * Extracts repository owner and name from the given repository URL.
@@ -109,7 +111,7 @@ export class RepositoriesService {
 
     const createdRepo = data[0];
 
-    await this.promptsService.createDefaultPrompts(createdRepo.id);
+    await this.promptsService.attachDefaultPromptsToRepo(createdRepo.id);
 
     return createdRepo;
   }

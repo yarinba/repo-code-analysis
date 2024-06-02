@@ -4,11 +4,11 @@ import { RepositoriesController } from './repositories.controller';
 import { RepositoriesService } from './repositories.service';
 import { CodeAnalyzerModule } from '../code-analyzer/code-analyzer.module';
 import { RepositoriesEventHandler } from './repositories.event-handler';
-import { PromptsService } from '../prompts/prompts.service';
+import { PromptsModule } from '../prompts/prompts.module';
 
 @Module({
-  imports: [CodeAnalyzerModule],
+  imports: [CodeAnalyzerModule, PromptsModule],
   controllers: [RepositoriesController],
-  providers: [DBProvider, RepositoriesService, RepositoriesEventHandler, PromptsService],
+  providers: [DBProvider, RepositoriesService, RepositoriesEventHandler],
 })
 export class RepositoriesModule {}
