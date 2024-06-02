@@ -7,12 +7,16 @@ import {
 } from '@nestjs/common';
 import { type TRepository } from '@types';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
+import { PromptsService } from '../prompts/prompts.service';
 
 @Injectable()
 export class RepositoriesService {
   private readonly table = 'repositories';
 
-  constructor(@Inject(DB_CLIENT) private readonly db: DB) {}
+  constructor(
+    @Inject(DB_CLIENT) private readonly db: DB,
+    private readonly promptsService: PromptsService,
+  ) {}
 
   /**
    * Extracts repository owner and name from the given repository URL.
@@ -105,7 +109,11 @@ export class RepositoriesService {
       .insert({ owner, name, url: repositoryURL })
       .select();
 
-    return data[0];
+    const createdRepo = data[0];
+
+    await this.promptsService.attachDefaultPromptsToRepo(createdRepo.id);
+
+    return createdRepo;
   }
 
   /**
