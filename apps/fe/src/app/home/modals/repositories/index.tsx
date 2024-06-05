@@ -22,7 +22,7 @@ export function RepositoriesModal({ open, onClose }: IProps) {
   };
 
   return (
-    <Transition appear show={true} as={Fragment}>
+    <Transition appear show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10 " onClose={onClose}>
         <Transition.Child
           as={Fragment}
