@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { GITHUB_URL_REGEX } from '@utils';
 
 export const useScanRepository = () => {
-  const [newRepositoryURL, setNewRepositoryURL] = useState('');
+  const [repositoryURL, setRepositoryURL] = useState('');
 
+  const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
   const { mutate: scan, isPending } = useMutation({
@@ -16,16 +19,22 @@ export const useScanRepository = () => {
 
   return {
     scanInputProps: {
-      value: newRepositoryURL,
+      value: repositoryURL,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setNewRepositoryURL(e.target.value),
+        setRepositoryURL(e.target.value),
     },
     scanButtonProps: {
       onClick: () => {
-        scan(newRepositoryURL);
-        setNewRepositoryURL('');
+        if (!repositoryURL.match(GITHUB_URL_REGEX)) {
+          enqueueSnackbar('Invalid repository URL', { variant: 'error' });
+
+          return;
+        }
+
+        scan(repositoryURL);
+        setRepositoryURL('');
       },
-      disabled: isPending,
+      disabled: !repositoryURL || isPending,
     },
   };
 };

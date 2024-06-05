@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@utils": ["libs/utils/src/index.ts"],
       "@types": ["libs/types/src/index.ts"]
     }
   },

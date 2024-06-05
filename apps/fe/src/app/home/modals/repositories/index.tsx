@@ -114,7 +114,7 @@ export function RepositoriesModal({ open, onClose }: IProps) {
                     />
                     <button
                       {...scanButtonProps}
-                      className="shrink-0 rounded-r-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none"
+                      className="shrink-0 rounded-r-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Scan Repository
                     </button>

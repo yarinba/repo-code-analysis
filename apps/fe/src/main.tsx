@@ -5,6 +5,8 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import { SnackbarProvider } from 'notistack';
+
 import AppContextProvider from './app/context/app-context-provider';
 import App from './app/app';
 
@@ -24,9 +26,11 @@ root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
+      <SnackbarProvider>
+        <AppContextProvider>
+          <App />
+        </AppContextProvider>
+      </SnackbarProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

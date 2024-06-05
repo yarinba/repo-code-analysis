@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { type TRepository } from '@types';
+import { GITHUB_URL_REGEX } from '@utils';
 import { type DB, DB_CLIENT } from '../../providers/db.provider';
 import { PromptsService } from '../prompts/prompts.service';
 
@@ -20,7 +21,6 @@ export class RepositoriesService {
 
   /**
    * Extracts repository owner and name from the given repository URL.
-   * Supports both HTTPS and SSH formats for GitHub URLs.
    *
    * @param repositoryURL The URL of the repository.
    *
@@ -31,22 +31,10 @@ export class RepositoriesService {
     owner: string;
     name: string;
   } {
-    // Regular expressions for both HTTPS and SSH URLs for GitHub
-    const HTTPS_REGEX =
-      /^(https?):\/\/(www\.)?github\.com\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\.git$/;
-    const SSH_REGEX =
-      /^git@github\.com:([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\.git$/;
+    const match = repositoryURL.match(GITHUB_URL_REGEX);
 
-    // Check if the URL matches either HTTPS or SSH format
-    const httpsMatch = repositoryURL.match(HTTPS_REGEX);
-    const sshMatch = repositoryURL.match(SSH_REGEX);
-
-    if (httpsMatch) {
-      return { owner: httpsMatch[3], name: httpsMatch[4] };
-    }
-
-    if (sshMatch) {
-      return { owner: sshMatch[1], name: sshMatch[2] };
+    if (match) {
+      return { owner: match[3], name: match[4] };
     }
 
     throw new HttpException(
