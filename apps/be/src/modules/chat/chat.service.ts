@@ -38,6 +38,9 @@ export class ChatService {
         'Given the following conversation about a codebase and a follow up question, rephrase the follow up question to be a standalone question related to the codebase. If the question is not related to the codebase, respond with "I apologize, but my purpose is to answer questions specifically about the provided codebase. Please ask a question that is relevant to the code."',
       ),
       AIMessagePromptTemplate.fromTemplate(
+        "You must format your output as a Markdown format. Don't mention anything about Markdown in your response; just return the response itself in Markdown format.",
+      ),
+      AIMessagePromptTemplate.fromTemplate(
         `Follow Up Input: {question}
         Standalone question:`,
       ),

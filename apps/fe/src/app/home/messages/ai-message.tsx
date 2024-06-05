@@ -1,4 +1,6 @@
 import { type TMessage } from '@types';
+import MarkdownPreview from '@uiw/react-markdown-preview';
+
 import { useScrollIntoView } from './useScrollIntoView';
 import { useAppContext } from '../../context/use-app-context.hook';
 import Loader from '../../components/loader';
@@ -29,8 +31,11 @@ export function AIMessage({ message }: IProps) {
         )}
       </div>
 
-      <div className="flex max-w-3xl items-center justify-between rounded-xl">
-        <p>{message.text}</p>
+      <div className="flex w-11/12 flex-col flex-wrap">
+        <MarkdownPreview
+          source={message.text}
+          style={{ backgroundColor: 'transparent', maxWidth: '90%' }}
+        />
       </div>
     </div>
   );
