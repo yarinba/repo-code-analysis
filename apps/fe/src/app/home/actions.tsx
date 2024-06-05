@@ -24,6 +24,7 @@ export function Actions() {
       </button>
 
       <RepositoriesModal
+        key={`repositories-modal-${isRepositoriesModalOpen}`}
         open={isRepositoriesModalOpen}
         onClose={() => setIsRepositoriesModalOpen(false)}
       />
