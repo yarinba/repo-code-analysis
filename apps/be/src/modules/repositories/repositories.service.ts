@@ -61,7 +61,10 @@ export class RepositoriesService {
    * @returns Promise<any[]> representing an array of all repositories.
    */
   public async findAll() {
-    const { data } = await this.db.from(this.table).select('*');
+    const { data } = await this.db
+      .from(this.table)
+      .select('*')
+      .order('created_at', { ascending: false });
 
     return data;
   }

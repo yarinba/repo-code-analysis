@@ -1,44 +1,18 @@
-import { Fragment, useState } from 'react';
-import axios from 'axios';
-import Fuse from 'fuse.js';
+import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useAppContext } from '../../context/use-app-context.hook';
-import { useQuery } from '@tanstack/react-query';
 import { type TRepository } from '@types';
+import { useFuzzyRepositories } from './useFuzzyRepositories.hook';
+import { useScanRepository } from './useScanRepository.hook';
+import { useAppContext } from '../../../context/use-app-context.hook';
 
 interface IProps {
   open: boolean;
   onClose: () => void;
 }
 
-const useFuzzyRepositories = () => {
-  const [search, setSearch] = useState('');
-
-  const { data = [] } = useQuery<TRepository[]>({
-    queryKey: ['repositories'],
-    queryFn: () => axios.get('/repositories').then((res) => res.data),
-  });
-
-  const fusedRepositories = new Fuse(data ?? [], {
-    keys: ['name', 'owner', 'url'],
-    threshold: 0.2,
-    minMatchCharLength: 1,
-  })
-    .search(search)
-    .map((result) => result.item);
-
-  return {
-    searchInputProps: {
-      value: search,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setSearch(e.target.value),
-    },
-    repositories: search.length === 0 ? data : fusedRepositories,
-  };
-};
-
 export function RepositoriesModal({ open, onClose }: IProps) {
   const { searchInputProps, repositories } = useFuzzyRepositories();
+  const { scanInputProps, scanButtonProps } = useScanRepository();
 
   const { setRepository } = useAppContext();
 
@@ -73,8 +47,8 @@ export function RepositoriesModal({ open, onClose }: IProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="h-[40rem] w-full max-w-5xl transform overflow-scroll rounded-2xl bg-slate-200 px-6 pt-6 pb-0 text-left align-middle shadow-xl transition-all dark:bg-slate-600 md:h-[30rem]">
-                <div className="h-[calc(100%-4rem)] overflow-y-auto">
+              <Dialog.Panel className="h-[40rem] w-full max-w-5xl transform overflow-scroll rounded-2xl bg-slate-200 px-6 pt-6 pb-0 text-left align-middle shadow-xl transition-all dark:bg-slate-600 md:h-[32rem]">
+                <div className="h-[calc(100%-8rem)] overflow-y-auto">
                   <Dialog.Description>
                     <div className="xs:grid-cols-1 grid  gap-4 sm:grid-cols-2 md:grid-cols-3">
                       {repositories.map((repo) => (
@@ -86,10 +60,22 @@ export function RepositoriesModal({ open, onClose }: IProps) {
                             <div className="flex">
                               <div className="ml-4 flex flex-col gap-y-2">
                                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200">
-                                  {repo.name}
+                                  <a
+                                    href={`https://github.com/${repo.owner}/${repo.name}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {repo.name}
+                                  </a>
                                 </h3>
                                 <span className="text-xs text-slate-400">
-                                  {repo.owner}
+                                  <a
+                                    href={`https://github.com/${repo.owner}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {repo.owner}
+                                  </a>
                                 </span>
                               </div>
                             </div>
@@ -119,6 +105,20 @@ export function RepositoriesModal({ open, onClose }: IProps) {
                     placeholder="Search repositories..."
                     className="w-full rounded-lg border border-slate-300 p-2 text-sm text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                   />
+                  <div className="mt-4 flex gap-2 ">
+                    <input
+                      {...scanInputProps}
+                      type="text"
+                      placeholder="https://github.com/<owner>/<repo>.git"
+                      className="w-full rounded-l-lg border border-slate-300 p-2 text-sm text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                    />
+                    <button
+                      {...scanButtonProps}
+                      className="shrink-0 rounded-r-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none"
+                    >
+                      Scan Repository
+                    </button>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
