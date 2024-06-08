@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { RepositoriesService } from './repositories.service';
 import { ScanCompletedEvent } from '../code-analyzer/events/scan-completed.event';
@@ -17,6 +17,8 @@ export class RepositoriesEventHandler {
    */
   @OnEvent(ScanCompletedEvent.eventName)
   async handleScanCompleted({ repositoryId }: ScanCompletedEvent) {
+    Logger.log(`handle ScanCompletedEvent for repository ${repositoryId}`);
+
     await this.repositoriesService.update(repositoryId, { status: 'DONE' });
   }
 }
