@@ -1,4 +1,13 @@
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  HttpException,
+  HttpStatus,
+  Headers,
+  Post,
+  Res,
+} from '@nestjs/common';
+import type { Response } from 'express';
+
 import { ValidateApiKeyService } from './validate-api-key.service';
 
 @Controller('validate-api-key')
@@ -11,11 +20,19 @@ export class ValidateApiKeyController {
    * @returns A message indicating whether the API key is valid.
    */
   @Post()
-  async validate(@Body('apiKey') apiKey: string) {
+  async validate(
+    @Headers('openai-api-key') apiKey: string,
+    @Res() res: Response,
+  ) {
     const isValid = await this.validateApiKeyService.validateApiKey(apiKey);
+
     if (!isValid) {
-      throw new HttpException('Invalid OpenAI API key', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Invalid OpenAI API key',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    return { message: 'Valid API key' };
+
+    res.status(HttpStatus.OK).send();
   }
 }

@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { useAppContext } from '../context/use-app-context.hook';
+import { useCredentials } from '../hooks/useCredentials';
+import { Spinner } from '../components';
 
 export function Login() {
-  const { setCredentials } = useAppContext();
-
   const [inputValue, setInputValue] = useState('');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [, { handleUpdateCredentials, loading }] = useCredentials({
+    onError: () => setInputValue(''),
+  });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // TODO: Validate OpenAI API key
-    setCredentials(inputValue);
+    await handleUpdateCredentials(inputValue);
   };
 
   return (
@@ -23,9 +25,12 @@ export function Login() {
               <div className="mb-4">
                 <label
                   htmlFor="openai-api-key"
-                  className="bold mb-2 block text-sm font-bold text-gray-600"
+                  className="bold mb-2 flex items-center justify-between"
                 >
-                  Enter your OpenAI API Key
+                  <p className="text-sm font-bold text-gray-600">
+                    Enter your OpenAI API Key
+                  </p>
+                  {loading && <Spinner />}
                 </label>
                 <input
                   value={inputValue}
@@ -51,7 +56,8 @@ export function Login() {
               </div>
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-x-2 rounded-lg bg-blue-600 px-3 py-2 text-center text-sm font-medium text-slate-50 hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300"
+                disabled={loading || inputValue.length === 0}
+                className="inline-flex w-full items-center justify-center gap-x-2 rounded-lg bg-blue-600 px-3 py-2 text-center text-sm font-medium text-slate-50 hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Login
               </button>

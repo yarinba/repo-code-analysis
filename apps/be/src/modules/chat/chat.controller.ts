@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import type { Response } from 'express';
+
 import { ChatService } from './chat.service';
 import askSchema from './schemas/ask.schema';
 import { ZodPipe } from '../../pipes/zod.pipe';

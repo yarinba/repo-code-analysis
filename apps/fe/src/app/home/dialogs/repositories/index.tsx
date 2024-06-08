@@ -49,7 +49,7 @@ export function RepositoriesDialog({ open, onClose }: IProps) {
             >
               <Dialog.Panel className="h-[40rem] w-full max-w-5xl transform overflow-scroll rounded-2xl bg-slate-200 px-6 pt-6 pb-0 text-left align-middle shadow-xl transition-all dark:bg-slate-600 md:h-[32rem]">
                 <div className="h-[calc(100%-8rem)] overflow-y-auto">
-                  <Dialog.Description>
+                  <Dialog.Description as="div">
                     <div className="xs:grid-cols-1 grid  gap-4 sm:grid-cols-2 md:grid-cols-3">
                       {repositories.map((repo) => (
                         <div

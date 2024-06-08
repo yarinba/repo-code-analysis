@@ -1,23 +1,19 @@
 import {
-  FC,
-  PropsWithChildren,
+  type FC,
+  type PropsWithChildren,
   createContext,
   useCallback,
-  useLayoutEffect,
   useState,
 } from 'react';
-import { useLocalStorage } from 'usehooks-ts';
 import { noop, uniqueId } from 'lodash';
-import axios from 'axios';
 import type { TMessage, TRepository } from '@types';
 import { API_URL } from '../../main';
+import { useCredentials } from '../hooks/useCredentials';
 
 export interface IAppContext {
   loadingMessage: string | null;
-  credentials: string | null;
   repository: TRepository | null;
   messages: TMessage[];
-  setCredentials: (credentials: string) => void;
   setRepository: (repository: TRepository) => void;
   addMessage: (message: TMessage) => Promise<void>;
   clearChat: () => void;
@@ -25,10 +21,8 @@ export interface IAppContext {
 
 export const AppContext = createContext<IAppContext>({
   loadingMessage: null,
-  credentials: null,
   repository: null,
   messages: [],
-  setCredentials: noop,
   setRepository: noop,
   addMessage: () => Promise.resolve(),
   clearChat: noop,
@@ -39,18 +33,8 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [messages, setMessages] = useState<TMessage[]>([]);
   const [repository, _setRepository] = useState<TRepository | null>(null);
-  const [credentials, setCredentials] = useLocalStorage<string | null>(
-    'openai-api-key',
-    null,
-  );
 
-  useLayoutEffect(() => {
-    if (credentials) {
-      axios.defaults.headers.common['openai-api-key'] = credentials;
-    } else {
-      delete axios.defaults.headers.common['openai-api-key'];
-    }
-  }, [credentials]);
+  const [credentials] = useCredentials();
 
   const addMessage = useCallback(
     async (message: TMessage) => {
@@ -127,10 +111,8 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     <AppContext.Provider
       value={{
         loadingMessage,
-        credentials,
         repository,
         messages,
-        setCredentials,
         setRepository,
         addMessage,
         clearChat: () => setMessages([]),

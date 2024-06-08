@@ -1,6 +1,8 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useAppContext } from '../../../context/use-app-context.hook';
+
+import { useCredentials } from '../../../hooks/useCredentials';
+import { Spinner } from '../../../components';
 
 interface IProps {
   open: boolean;
@@ -8,15 +10,17 @@ interface IProps {
 }
 
 export function SettingsDialog({ open, onClose }: IProps) {
-  const { setCredentials } = useAppContext();
+  const [inputValue, setInputValue] = useState('');
 
-  const [value, setValue] = useState('');
+  const [, { handleUpdateCredentials, loading }] = useCredentials({
+    onSuccess: onClose,
+    onError: () => setInputValue(''),
+  });
 
-  const handleSave = () => {
-    // TODO: validate credentials before saving
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    setCredentials(value);
-    onClose();
+    await handleUpdateCredentials(inputValue);
   };
 
   return (
@@ -46,56 +50,60 @@ export function SettingsDialog({ open, onClose }: IProps) {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-200 p-6 text-left align-middle shadow-xl transition-all dark:bg-slate-600">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-slate-900 dark:text-slate-200"
-                >
-                  Settings
-                </Dialog.Title>
+                <div className="flex items-center justify-between">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-slate-900 dark:text-slate-200"
+                  >
+                    Settings
+                  </Dialog.Title>
+                  {loading && <Spinner />}
+                </div>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                   Enter your new OpenAI API key to enable AI-powered exploration
                   and analysis of repositories.
                 </p>
-                <div className="mt-4">
-                  <input
-                    type="text"
-                    placeholder="OpenAI API Key"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 p-2 text-sm text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                  />
-                  <p
-                    id="openai-api-key-description"
-                    className="mt-2 text-xs text-gray-500"
-                  >
-                    You can find your OpenAI API key in your{' '}
-                    <a
-                      href="https://platform.openai.com/account/api-keys"
-                      className="text-blue-500 hover:underline"
+                <form onSubmit={handleSubmit}>
+                  <div className="mt-4">
+                    <input
+                      type="text"
+                      placeholder="OpenAI API Key"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 p-2 text-sm text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                    />
+                    <p
+                      id="openai-api-key-description"
+                      className="mt-2 text-xs text-gray-500"
                     >
-                      OpenAI account settings
-                    </a>
-                    .
-                  </p>
-                </div>
+                      You can find your OpenAI API key in your{' '}
+                      <a
+                        href="https://platform.openai.com/account/api-keys"
+                        className="text-blue-500 hover:underline"
+                      >
+                        OpenAI account settings
+                      </a>
+                      .
+                    </p>
+                  </div>
 
-                <div className="mt-6 flex justify-end gap-2">
-                  <button
-                    type="button"
-                    className="rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                    onClick={onClose}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                    onClick={handleSave}
-                    disabled={value.length === 0}
-                  >
-                    Save
-                  </button>
-                </div>
+                  <div className="mt-6 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      className="rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                      onClick={onClose}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={inputValue.length === 0 || loading}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

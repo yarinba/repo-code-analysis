@@ -3,7 +3,7 @@ import MarkdownPreview from '@uiw/react-markdown-preview';
 
 import { useScrollIntoView } from './useScrollIntoView';
 import { useAppContext } from '../../context/use-app-context.hook';
-import Loader from '../../components/loader';
+import { LoaderAI } from '../../components';
 
 interface IProps {
   message: TMessage;
@@ -23,7 +23,7 @@ export function AIMessage({ message }: IProps) {
         className="relative inline-flex h-10 w-10 shrink-0 scale-90 items-center justify-center overflow-hidden rounded-full bg-gray-200 outline outline-offset-2 outline-gray-600 dark:bg-gray-600"
       >
         {loadingMessage === message.id ? (
-          <Loader />
+          <LoaderAI />
         ) : (
           <span className="font-medium text-gray-600 dark:text-gray-300">
             AI
