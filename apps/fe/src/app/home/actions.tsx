@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useAppContext } from '../context/use-app-context.hook';
-import RepositoriesModal from './modals/repositories';
+import RepositoriesDialog from './dialogs/repositories';
 
 export function Actions() {
   const { repository, loadingMessage, clearChat } = useAppContext();
 
   const loading = Boolean(loadingMessage);
 
-  const [isRepositoriesModalOpen, setIsRepositoriesModalOpen] = useState(false);
+  const [openRepositoriesDialog, setOpenRepositoriesDialog] = useState(false);
 
   return (
     <div className="flex gap-2 py-2">
       <button
         id="repositories"
         disabled={loading}
-        onClick={() => setIsRepositoriesModalOpen(true)}
+        onClick={() => setOpenRepositoriesDialog(true)}
         className="flex grow items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-center text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span
@@ -23,10 +23,10 @@ export function Actions() {
         {repository ? repository.name : 'Choose Repository'}
       </button>
 
-      <RepositoriesModal
-        key={`repositories-modal-${isRepositoriesModalOpen}`}
-        open={isRepositoriesModalOpen}
-        onClose={() => setIsRepositoriesModalOpen(false)}
+      <RepositoriesDialog
+        key={`repositories-dialog-${openRepositoriesDialog}`}
+        open={openRepositoriesDialog}
+        onClose={() => setOpenRepositoriesDialog(false)}
       />
 
       <button

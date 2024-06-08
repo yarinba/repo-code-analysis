@@ -10,7 +10,7 @@ interface IProps {
   onClose: () => void;
 }
 
-export function RepositoriesModal({ open, onClose }: IProps) {
+export function RepositoriesDialog({ open, onClose }: IProps) {
   const { searchInputProps, repositories } = useFuzzyRepositories();
   const { scanInputProps, scanButtonProps } = useScanRepository();
 
@@ -129,4 +129,4 @@ export function RepositoriesModal({ open, onClose }: IProps) {
   );
 }
 
-export default RepositoriesModal;
+export default RepositoriesDialog;
