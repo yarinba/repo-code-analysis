@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAppContext } from '../context/use-app-context.hook';
 import RepositoriesDialog from './dialogs/repositories';
+import SettingsDialog from './dialogs/settings';
 
 export function Actions() {
   const { repository, loadingMessage, clearChat } = useAppContext();
@@ -8,6 +9,7 @@ export function Actions() {
   const loading = Boolean(loadingMessage);
 
   const [openRepositoriesDialog, setOpenRepositoriesDialog] = useState(false);
+  const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
 
   return (
     <div className="flex gap-2 py-2">
@@ -32,6 +34,7 @@ export function Actions() {
       <button
         id="settings"
         disabled={loading}
+        onClick={() => setOpenSettingsDialog(true)}
         className="flex items-center gap-x-2 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold text-blue-600 ring-1 ring-inset ring-blue-600 hover:bg-blue-600 hover:text-blue-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:w-40"
       >
         <svg
@@ -50,6 +53,12 @@ export function Actions() {
         </svg>
         <span className="hidden md:block">Settings</span>
       </button>
+
+      <SettingsDialog
+        key={`settings-dialog-${openSettingsDialog}`}
+        open={openSettingsDialog}
+        onClose={() => setOpenSettingsDialog(false)}
+      />
 
       <button
         id="clear-chat"
