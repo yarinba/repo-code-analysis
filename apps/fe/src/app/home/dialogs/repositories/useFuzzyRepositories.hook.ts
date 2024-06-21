@@ -10,6 +10,15 @@ export const useFuzzyRepositories = () => {
   const { data = [] } = useQuery<TRepository[]>({
     queryKey: ['repositories'],
     queryFn: () => axios.get('/repositories').then((res) => res.data),
+    refetchInterval: (query) => {
+      const { data } = query.state;
+
+      if (data?.some((repo) => repo.status === 'EMBEDDING')) {
+        return 5000;
+      }
+
+      return false;
+    },
   });
 
   const fusedRepositories = new Fuse(data ?? [], {
