@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useLocalStorage } from 'usehooks-ts';
 import axios from 'axios';
@@ -19,6 +19,16 @@ export const useCredentials = ({
   const [loading, setLoading] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  useLayoutEffect(() => {
+    if (credentials) {
+      axios.defaults.headers.common['openai-api-key'] = credentials;
+    }
+
+    return () => {
+      delete axios.defaults.headers.common['openai-api-key'];
+    };
+  }, [credentials]);
 
   const handleUpdateCredentials = async (newCredentials: string) => {
     setLoading(true);
