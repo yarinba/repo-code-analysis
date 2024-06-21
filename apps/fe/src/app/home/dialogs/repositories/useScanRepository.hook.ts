@@ -15,6 +15,10 @@ export const useScanRepository = () => {
     mutationFn: (repositoryURL: string) =>
       axios.post('/repositories', { repositoryURL }),
     onSuccess: () => queryClient.refetchQueries({ queryKey: ['repositories'] }),
+    onError: () =>
+      enqueueSnackbar('Failed to scan repository - probably already exists', {
+        variant: 'error',
+      }),
   });
 
   return {
