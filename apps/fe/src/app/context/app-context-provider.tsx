@@ -7,7 +7,6 @@ import {
 } from 'react';
 import { noop, uniqueId } from 'lodash';
 import type { TMessage, TRepository } from '@types';
-import { API_URL } from '../../main';
 import { useCredentials } from '../hooks/useCredentials';
 
 export interface IAppContext {
@@ -57,7 +56,7 @@ const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
         // init empty ai message
         setMessages((prevMessages) => [...prevMessages, initialAIMessage]);
 
-        const response = await fetch(`${API_URL}/chat`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
           method: 'post',
           headers: {
             Accept: 'application/json, text/plain, */*', // indicates which files we are able to understand

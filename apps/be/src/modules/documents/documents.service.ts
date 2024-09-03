@@ -69,8 +69,8 @@ export class DocumentsService {
 
     const retriever = vectorStore.asRetriever({
       searchType: 'mmr',
-      searchKwargs: { fetchK: 50 },
-      k: 10,
+      searchKwargs: { fetchK: 80 },
+      k: 15,
       filter: (rpc) =>
         rpc.filter('metadata->>repository_id', 'eq', repositoryId),
     });

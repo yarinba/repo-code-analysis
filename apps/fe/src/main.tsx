@@ -12,9 +12,7 @@ import App from './app/app';
 
 import './index.css';
 
-export const API_URL = 'http://localhost:3000/api' as const;
-
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -25,7 +23,7 @@ const queryClient = new QueryClient();
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
       <SnackbarProvider>
         <AppContextProvider>
           <App />
