@@ -2,7 +2,9 @@
   "name": "@repo-code-analyzer/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:be:production": "nx run be:serve:production"
+  },
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.19",
