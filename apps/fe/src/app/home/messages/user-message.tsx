@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { type TMessage } from '@types';
 import axios from 'axios';
+import type { TPrompt, TMessage } from '@types';
 import { useAppContext } from '../../context/use-app-context.hook';
 import { useScrollIntoView } from './useScrollIntoView';
 
@@ -19,6 +19,17 @@ export function UserMessage({ message }: IProps) {
     mutationKey: ['upvote', message.id],
     mutationFn: () =>
       axios.patch(`/prompts/upvote/${message.predefinedPromptId}`),
+    onMutate: () =>
+      queryClient.setQueryData<TPrompt[]>(
+        ['prompt-suggestions', repository?.id],
+        (data) =>
+          data?.map((prompt) => {
+            if (prompt.id === message.predefinedPromptId) {
+              return { ...prompt, score: prompt.score + 1 };
+            }
+            return prompt;
+          }),
+      ),
     onSuccess: () =>
       queryClient.refetchQueries({
         queryKey: ['prompt-suggestions', repository?.id],
@@ -29,6 +40,17 @@ export function UserMessage({ message }: IProps) {
     mutationKey: ['downvote', message.id],
     mutationFn: () =>
       axios.patch(`/prompts/downvote/${message.predefinedPromptId}`),
+    onMutate: () =>
+      queryClient.setQueryData<TPrompt[]>(
+        ['prompt-suggestions', repository?.id],
+        (data) =>
+          data?.map((prompt) => {
+            if (prompt.id === message.predefinedPromptId) {
+              return { ...prompt, score: prompt.score - 1 };
+            }
+            return prompt;
+          }),
+      ),
     onSuccess: () =>
       queryClient.refetchQueries({
         queryKey: ['prompt-suggestions', repository?.id],
