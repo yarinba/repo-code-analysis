@@ -46,10 +46,9 @@ export class PromptsService {
 
   public async attachDefaultPromptsToRepo(repositoryId: number) {
     const prompts = [
-      'What are the main technologies used in this repository?',
       'What is the general purpose of this repository?',
+      'What are the main technologies used in this repository?',
       'Explain in detail about one core service of this repository.',
-      'Does this repository have more than one contributor?',
     ];
 
     const { data } = await this.db
